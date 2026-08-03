@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mis Tareas</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="header-row">
+      <h1>Mis Tareas</h1>
+      <a href="/logout" id="logoutBtn">Cerrar sesión</a>
+    </div>
+
+    <% if (error) { %>
+      <div id="taskError" class="alert alert-error"><%= error %></div>
+    <% } %>
+    <% if (success) { %>
+      <div id="taskSuccess" class="alert alert-success"><%= success %></div>
+    <% } %>
+
+    <h2><%= editTask ? "Editar tarea" : "Nueva tarea" %></h2>
+    <form id="taskForm" method="POST" action="<%= editTask ? '/tasks/' + editTask.id : '/tasks' %>">
+      <label for="taskTitle">Título</label>
+      <input
+        type="text"
+        id="taskTitle"
+        name="title"
+        maxlength="<%= maxTitulo %>"
+        value="<%= editTask ? editTask.title : '' %>"
+      />
+
+      <label for="taskDesc">Descripción</label>
+      <textarea id="taskDesc" name="description"><%= editTask ? editTask.description : '' %></textarea>
+
+      <button type="submit" id="saveTaskBtn"><%= editTask ? "Actualizar" : "Agregar" %></button>
+      <% if (editTask) { %>
+        <a href="/tasks" id="cancelEditBtn">Cancelar</a>
+      <% } %>
+    </form>
+
+    <h2>Listado</h2>
+    <table id="tasksTable">
+      <thead>
+        <tr><th>Título</th><th>Descripción</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+        <% tasks.forEach(function(task) { %>
+          <tr id="task-row-<%= task.id %>">
+            <td><%= task.title %></td>
+            <td><%= task.description %></td>
+            <td>
+              <a href="/tasks/<%= task.id %>/edit" id="edit-<%= task.id %>">Editar</a>
+              <form method="POST" action="/tasks/<%= task.id %>/delete" style="display:inline">
+                <button type="submit" id="delete-<%= task.id %>">Eliminar</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+    <p id="taskCount">Total de tareas: <%= tasks.length %></p>
+  </div>
+</body>
+</html>
