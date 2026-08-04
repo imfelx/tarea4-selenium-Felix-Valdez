@@ -1,10 +1,5 @@
 # Historias de Usuario — Tarea 4: Pruebas Automatizadas con Selenium
 
-> Copia cada historia como un "Work Item" (Azure DevOps: *User Story*) o "Issue" (Jira: *Story*)
-> en el tablero. Incluye el título, la descripción y los criterios de aceptación/rechazo tal cual
-> aparecen aquí, dentro de la sección de descripción o en el campo de criterios de aceptación.
-
----
 
 ## HU-01 — Inicio de sesión
 
