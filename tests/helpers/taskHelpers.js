@@ -25,15 +25,24 @@ async function createTask(driver, title, description = "") {
 
 /** Busca la fila de una tarea por su título y devuelve su id numérico (o null) */
 async function findTaskIdByTitle(driver, title) {
-  const rows = await driver.findElements(By.css("#tasksTable tbody tr"));
-  for (const row of rows) {
-    const cellText = await row.findElement(By.css("td")).getText();
-    if (cellText === title) {
-      const rowId = await row.getAttribute("id"); // task-row-<id>
-      return rowId.replace("task-row-", "");
-    }
-  }
-  return null;
+  return driver.wait(async () => {
+    return driver.executeScript(
+      (searchTitle) => {
+        const rows = Array.from(document.querySelectorAll("#tasksTable tbody tr"));
+        const matchedRow = rows.find((row) => {
+          const firstCell = row.querySelector("td");
+          return firstCell && firstCell.textContent.trim() === searchTitle;
+        });
+
+        if (!matchedRow) {
+          return null;
+        }
+
+        return matchedRow.id.replace("task-row-", "");
+      },
+      title
+    );
+  }, 5000, `No se encontró la tarea ${title}`);
 }
 
 module.exports = { login, createTask, findTaskIdByTitle };

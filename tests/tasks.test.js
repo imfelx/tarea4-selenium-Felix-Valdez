@@ -201,10 +201,14 @@ describe("HU-05: Eliminar tarea", function () {
 
     let rows = await driver.findElements(By.css("#tasksTable tbody tr"));
     while (rows.length > 0) {
+      const expectedRemaining = rows.length - 1;
       const rowId = await rows[0].getAttribute("id");
       const id = rowId.replace("task-row-", "");
       await driver.findElement(By.id(`delete-${id}`)).click();
-      await driver.wait(until.elementLocated(By.id("tasksTable")), 5000);
+      await driver.wait(async () => {
+        const currentRows = await driver.findElements(By.css("#tasksTable tbody tr"));
+        return currentRows.length === expectedRemaining;
+      }, 5000);
       rows = await driver.findElements(By.css("#tasksTable tbody tr"));
     }
 
